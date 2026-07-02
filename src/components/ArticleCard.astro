@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface Props {
   title: string;
   description: string;
@@ -6,9 +9,11 @@ interface Props {
   slug: string;
   tags: string[];
   pillar: string;
+  heroImage?: ImageMetadata;
+  heroImageAlt?: string;
 }
 
-const { title, description, pubDate, slug, tags, pillar } = Astro.props;
+const { title, description, pubDate, slug, tags, pillar, heroImage, heroImageAlt } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const pillarLabels: Record<string, string> = {
@@ -25,38 +30,51 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 ---
 
 <article class="py-6 border-b border-slate-200 last:border-none relative">
-  <div class="flex items-center gap-3 flex-wrap mb-2">
-    <span class="text-xs font-semibold tracking-widest uppercase text-indigo-600">
-      {pillarLabels[pillar] ?? pillar}
-    </span>
-    <time
-      datetime={pubDate.toISOString()}
-      class="text-sm text-slate-500"
-    >
-      {pubDate.toLocaleDateString('sv-SE', dateOptions)}
-    </time>
-  </div>
-
-  <h2 class="font-semibold text-xl tracking-tight leading-snug mb-1.5">
-    <a
-      href={`${base}/blog/${slug}`}
-      class="text-slate-900 hover:text-indigo-600 transition-colors no-underline after:absolute after:inset-0"
-    >
-      {title}
-    </a>
-  </h2>
-
-  <p class="text-slate-500 text-[0.9375rem] leading-relaxed mb-3">
-    {description}
-  </p>
-
-  {tags.length > 0 && (
-    <div class="flex gap-2 flex-wrap">
-      {tags.map(tag => (
-        <span class="font-mono text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded px-2 py-0.5">
-          {tag}
+  <div class="flex gap-4">
+    {heroImage && (
+      <Image
+        src={heroImage}
+        alt={heroImageAlt ?? ''}
+        width={112}
+        height={80}
+        class="w-28 h-20 shrink-0 rounded-lg object-cover"
+      />
+    )}
+    <div class="min-w-0">
+      <div class="flex items-center gap-3 flex-wrap mb-2">
+        <span class="text-xs font-semibold tracking-widest uppercase text-indigo-600">
+          {pillarLabels[pillar] ?? pillar}
         </span>
-      ))}
+        <time
+          datetime={pubDate.toISOString()}
+          class="text-sm text-slate-500"
+        >
+          {pubDate.toLocaleDateString('sv-SE', dateOptions)}
+        </time>
+      </div>
+
+      <h2 class="font-semibold text-xl tracking-tight leading-snug mb-1.5">
+        <a
+          href={`${base}/blog/${slug}`}
+          class="text-slate-900 hover:text-indigo-600 transition-colors no-underline after:absolute after:inset-0"
+        >
+          {title}
+        </a>
+      </h2>
+
+      <p class="text-slate-500 text-[0.9375rem] leading-relaxed mb-3">
+        {description}
+      </p>
+
+      {tags.length > 0 && (
+        <div class="flex gap-2 flex-wrap">
+          {tags.map(tag => (
+            <span class="font-mono text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded px-2 py-0.5">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
-  )}
+  </div>
 </article>

@@ -47,6 +47,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           slug={post.id.replace(/\.md$/, '')}
           tags={post.data.tags}
           pillar={post.data.pillar}
+          heroImage={post.data.heroImage}
+          heroImageAlt={post.data.heroImageAlt}
         />
       ))
     )}
